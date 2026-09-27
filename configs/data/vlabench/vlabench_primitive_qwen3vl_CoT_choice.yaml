@@ -1,0 +1,57 @@
+# @package _global_
+
+defaults:
+  - sources/vlabench_cot_choice
+
+
+cot_fields_all:
+  Understanding: [goal]
+  Grounding: [visible_objects]
+  Planning: [plan, subtask_name, subtask_reasoning]
+  Acting: [movement_description, gripper_pose, waypoint_px]
+
+
+# cot_fields_all:
+#   Grounding: [visible_objects]
+#   Planning: [subtask_name]
+#   Acting: [movement_description]
+
+
+data:
+  type: BaseDataModule
+  params:
+    type: json
+    max_steps: ${trainer.max_steps}
+    add_meta_to_prompt: false
+    obs_length: 1
+    obs_interval: 1
+    action_length: 10
+
+    train_datasets:
+      batch_size: 16
+      sources:
+        vlabench_choice:
+          weight: 1.0
+      transforms:
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_direct: [0, 7]
+              action_padding: [7, 32]
+
+        - type: ComposeAction
+          use_ideal_length: true
+          reversed_data_flow:
+            action:
+              action_direct_norm: [0, 7]
+              action_padding: [7, 32]
+              action_mask_key: action_mask
+
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+          enable_choice: true
+
+        - type: Collect
+          patterns: [state, action, action_mask, vlm*]
+

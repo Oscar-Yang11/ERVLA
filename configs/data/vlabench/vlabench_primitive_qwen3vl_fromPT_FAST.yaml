@@ -1,0 +1,66 @@
+# @package _global_
+
+defaults:
+  - sources/vlabench
+
+
+data:
+  type: BaseDataModule
+  params:
+    type: stream
+    max_steps: ${trainer.max_steps}
+    add_meta_to_prompt: false
+    obs_length: 1
+    obs_interval: 1
+    action_length: 10
+
+    train_datasets:
+      batch_size: 16
+      sources:
+        vlabench:
+          weight: 1.0
+      transforms:
+        - type: ComposeAction
+          use_ideal_length: true
+          reversed_data_flow:
+            action:
+              action_direct_qn: [0, 7]
+              action_padding: [7, 32]
+              action_mask_key: action_mask
+
+        - type: GetFASTActionToken
+          action_tokenizer: "models/FAST/pi_fast_tokenizer"
+          data_flow:
+            action: fast_action_token
+
+        - type: VLMProcessorForFAST
+          model: Qwen/Qwen3-VL-4B-Instruct
+
+
+        - type: Collect
+          patterns: [vlm*]
+
+    # val_datasets:
+    #   batch_size: 16
+    #   sources:
+    #     vlabench_cot:
+    #       weight: 1.0
+    #   transforms:
+    #     - type: ComposeAction
+    #       use_ideal_length: true
+    #       reversed_data_flow:
+    #         action:
+    #           action_direct_qn: [0, 7]
+    #           action_padding: [7, 32]
+    #           action_mask_key: action_mask
+
+    #     - type: GetFASTActionToken
+    #       action_tokenizer: "models/FAST/pi_fast_tokenizer"
+    #       data_flow:
+    #         action: fast_action_token
+
+    #     - type: VLMProcessorForFAST
+    #       model: Qwen/Qwen3-VL-4B-Instruct
+
+    #     - type: Collect
+    #       patterns: [vlm*]

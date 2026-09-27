@@ -1,0 +1,51 @@
+# @package _global_
+
+defaults:
+  - sources/midata
+
+data:
+  type: BaseDataModule
+  params:
+    type: stream # [stream, json], json is only available while no vlm data existing.
+    max_steps: ${trainer.max_steps}
+    add_meta_to_prompt: false
+    obs_length: 1
+    obs_interval: 1
+    action_length: 30
+
+    train_datasets:
+      batch_size: 16
+      sources:
+        midata_pt_v4_lego:
+          weight: 1.0
+      transforms:
+        - type: GetTaskStatusAndActionMask
+          data_flow:
+            action_mask: [task_status, action_mask]
+        - type: ComposeAction
+          reversed_data_flow:
+            action:
+              action_left_ee_pos_gn: [0, 3]
+              action_left_ee_aa_gn: [3, 6]
+              action_left_gripper_pos_gn: [6, 7]
+              action_left_gripper_pos_direct_gn: [7, 8]
+              action_right_ee_pos_gn: [8, 11]
+              action_right_ee_aa_gn: [11, 14]
+              action_right_gripper_pos_gn: [14, 15]
+              action_right_gripper_pos_direct_gn: [15, 16]
+              action_padding: [16, 60]
+              action_mask_key: action_mask
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_left_arm_joint_qn: [0, 7]
+              proprio_left_gripper_pos_qn: [7, 8]
+              proprio_right_arm_joint_qn: [8, 15]
+              proprio_right_gripper_pos_qn: [15, 16]
+              proprio_padding: [16, 60]
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+          enable_choice: true
+        - type: Collect
+          patterns: [state, action, action_mask, vlm*]

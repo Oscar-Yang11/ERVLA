@@ -1,0 +1,10 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "P2_L1"
+      state_shape: auto
+      action_shape: auto

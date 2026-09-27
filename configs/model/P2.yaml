@@ -1,0 +1,14 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "P2"
+      state_shape: auto
+      action_shape: auto
+      dit_num_layers: 16
+      freeze_vlm: false
+      stop_gradient_to_vlm: false
+      enable_dct: false

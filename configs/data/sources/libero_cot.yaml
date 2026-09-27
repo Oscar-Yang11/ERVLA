@@ -1,0 +1,65 @@
+# @package _global_
+
+libero_data_root: ??? # JSON+video dataset root (data2)
+libero_cot_root: ??? # COT dataset root
+
+sources:
+  libero_spatial:
+    train_path:
+      - ${libero_data_root}/libero_spatial/2026-04-27/train/data
+    cot_path: ${libero_cot_root}/libero_spatial
+
+    # Statistics from the original LIBERO COT training configuration.
+    mean:
+      action_direct: [[0.05814687081359905, 0.0831763852701976, -0.08981689275429586, 0.0009011951350724207, 0.0051593337623020855, -0.005383291315492475, -0.06720815181274453]]
+    std:
+      action_direct: [[0.33410981083923214, 0.37449977474720814, 0.43667013242170183, 0.040497275405211246, 0.06329711873860247, 0.07979442522859485, 0.997738976050307]]
+
+    transforms: &libero_cot_transforms
+      training:
+        - type: LoadData
+          dataset_action_length: 10
+          general_task_prob: 0.0
+          subtask_task_prob: 1.0
+          add_cot_prob: 0.5
+          cot_fields: ${cot_fields_all}
+        - type: PhotoMetricDistortion
+          data_flow:
+            media: media
+        - type: GetAbsAction
+          padding_action: [0, 0, 0, 0, 0, 0, -1]
+          data_flow:
+            actions.direct: action_direct
+        - type: GetAbsState
+          data_flow:
+            proprios.direct: proprio_direct
+        - type: Normalize
+          mode: gaussian
+          mean: ${sources.libero_spatial.mean}
+          std: ${sources.libero_spatial.std}
+          data_flow:
+            action_direct: action_direct_norm
+
+  libero_object:
+    train_path:
+      - ${libero_data_root}/libero_object/2026-04-27/train/data
+    cot_path: ${libero_cot_root}/libero_object
+    mean: ${sources.libero_spatial.mean}
+    std: ${sources.libero_spatial.std}
+    transforms: *libero_cot_transforms
+
+  libero_goal:
+    train_path:
+      - ${libero_data_root}/libero_goal/2026-04-27/train/data
+    cot_path: ${libero_cot_root}/libero_goal
+    mean: ${sources.libero_spatial.mean}
+    std: ${sources.libero_spatial.std}
+    transforms: *libero_cot_transforms
+
+  libero_10:
+    train_path:
+      - ${libero_data_root}/libero_10/2026-04-27/train/data
+    cot_path: ${libero_cot_root}/libero_10
+    mean: ${sources.libero_spatial.mean}
+    std: ${sources.libero_spatial.std}
+    transforms: *libero_cot_transforms

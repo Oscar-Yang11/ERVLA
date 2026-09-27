@@ -1,0 +1,43 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: sort-simple-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.6.9
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args:
+          - --fix
+        exclude: "src/scheduler/*"
+      # Run the formatter.
+      - id: ruff-format
+        args: [--line-length=120]
+
+  - repo: local
+    hooks:
+      - id: usort
+        name: usort
+        entry: usort format
+        language: python
+        types: [python]
+        additional_dependencies:
+          - usort==1.0.8
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.5.1
+    hooks:
+      - id: prettier
+        name: prettier-yaml
+        files: \.ya?ml$
+        args:
+          - --parser
+          - yaml
+          - --print-width
+          - "800"

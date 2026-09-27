@@ -1,0 +1,46 @@
+# PyTorch CUDA 12.8 wheels
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+torch==2.8.0+cu128
+torchvision==0.23.0+cu128
+
+# MiBot training
+transformers==4.57.1
+lightning==2.5.3
+deepspeed==0.17.5
+liger_kernel_nightly==0.6.4.dev20260105205519
+hydra-core
+omegaconf
+mmengine
+mosaicml-streaming
+pyarrow
+decord
+numpy
+scipy
+pillow
+opencv-python
+h5py
+einops
+safetensors
+accelerate
+tqdm
+wandb
+tensorboard
+packaging
+ninja
+requests
+PyYAML
+
+# Evaluation and annotation utilities
+tyro
+imageio
+imageio-ffmpeg
+pandas
+matplotlib
+openpyxl
+
+# MiBot uses the CUDA extension directly during training.
+flash-attn==2.8.3
+
+# Install this checkout in editable mode as part of the same command.
+-e .

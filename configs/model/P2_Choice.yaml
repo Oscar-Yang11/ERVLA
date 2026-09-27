@@ -1,0 +1,12 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "P2_Choice"
+      state_shape: auto
+      action_shape: auto
+      n_choices: 5
+      soft_routing: false

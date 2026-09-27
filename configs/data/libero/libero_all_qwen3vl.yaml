@@ -1,0 +1,64 @@
+# @package _global_
+
+defaults:
+  - sources/libero
+
+data:
+  type: BaseDataModule
+  params:
+    type: stream # [stream, json], json is only available while no vlm data existing.
+    max_steps: ${trainer.max_steps}
+    add_meta_to_prompt: false
+    obs_length: 1
+    obs_interval: 1
+    action_length: 10
+
+    train_datasets:
+      batch_size: 16
+      sources:
+        libero_all:
+          weight: 1.0
+      transforms:
+        - type: GetTaskStatusAndActionMask
+          data_flow:
+            action_mask: [task_status, action_mask]
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_direct: [0, 8]
+        - type: ComposeAction
+          reversed_data_flow:
+              action:
+                action_direct: [0, 7]
+                task_status: [7, 8]
+                action_mask_key: action_mask
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+        - type: Collect
+          patterns: [action, action_mask, state, vlm*]
+
+    val_datasets:
+      batch_size: 16
+      sources:
+        libero_all:
+          weight: 1.0
+      transforms:
+        - type: GetTaskStatusAndActionMask
+          data_flow:
+            action_mask: [task_status, action_mask]
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_direct: [0, 8]
+        - type: ComposeAction
+          reversed_data_flow:
+              action:
+                action_direct: [0, 7]
+                task_status: [7, 8]
+                action_mask_key: action_mask
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+        - type: Collect
+          patterns: [action, action_mask, state, vlm*]

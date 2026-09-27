@@ -1,0 +1,58 @@
+# @package _global_
+
+trainer:
+  accelerator: "auto"
+
+  precision: "bf16-mixed"
+  num_nodes: -1 # -1 for all nodes
+
+  strategy:
+    type: fsdp
+
+  # Optimizer/Scheduler settings
+  optimizer:
+    type: "torch.optim.AdamW"
+    params:
+      lr: 1.
+      betas: [0.9, 0.95]
+      weight_decay: 0.1
+      eps: 1.0e-08
+      # fused: true
+
+  scheduler:
+    type: src.utils.cosine_warmup.get_cosine_schedule_with_warmup
+    params:
+      num_training_steps: ${trainer.max_steps}
+      num_warmup_steps: 2000
+      warmup_lr_start: 5e-7
+      max_lr: 1e-4
+      min_lr: 5e-7
+
+  # Training settings
+  seed: 42
+  max_steps: 10000
+  val_check_interval: 2000
+  save_interval: 2000
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  gradient_clip_algorithm: "value"
+
+  # Checkpointing, the final path will be {default_root_dir}/{project}/{exp_name}
+  project: "demo"
+  exp_name: "test"
+  default_root_dir: "outputs"
+
+  # Restore from checkpoint
+  ckpt_path: null # "last" or "best" or path/to/ckpt
+  resume_from_last: false # if true, resume from {default_root_dir}/project_{project}/{exp_name}/last.ckpt when present; otherwise start fresh
+
+  # Profiling
+  profiler: null
+
+  # Logging
+  enable_progress_bar: false
+
+  num_sanity_val_steps: 2
+
+  # GC settings
+  gc_interval: 1000

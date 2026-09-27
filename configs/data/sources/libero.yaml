@@ -1,0 +1,49 @@
+libero_all:
+  train_path:
+    - data/libero_all/2025-09-28/train/data/
+  val_path:
+    - data/libero_all/2025-09-28/train/data/
+
+  mean:
+    action_direct: [[+0.0628, +0.0868, -0.0904, +0.0005, +0.0056, -0.0052, -0.0496]]
+  std:
+    action_direct: [[+0.3355, +0.3784, +0.4447, +0.0392, +0.0634, +0.0780, +0.9988]]
+  
+  transforms:
+    training:
+      - type: LoadData
+        dataset_action_length: 10
+      - type: PhotoMetricDistortion
+        data_flow:
+          media: media
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, -1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.libero_all.mean}
+        std: ${sources.libero_all.std}
+        data_flow:
+          action_direct: action_direct
+
+    validation:
+      - type: LoadData
+        dataset_action_length: 10
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, -1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.libero_all.mean}
+        std: ${sources.libero_all.std}
+        data_flow:
+          action_direct: action_direct
+

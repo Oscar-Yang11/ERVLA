@@ -1,0 +1,47 @@
+vlm:
+  train_path:
+    - data/vlm_mds/260120/agibot-beta_eqa/index.json
+    - data/vlm_mds/260120/agibot-beta_trajectory_bimanual/index.json
+    - data/vlm_mds/260120/cc3m_caption/index.json
+    - data/vlm_mds/260120/droid_trajectory/index.json
+    - data/vlm_mds/260120/molmoact_eqa/index.json
+    - data/vlm_mds/260120/agibot-beta_grounding/index.json
+    - data/vlm_mds/260120/Cambrian-6M_vqa/index.json
+    - data/vlm_mds/260120/droid_eqa/index.json
+    - data/vlm_mds/260120/FineVision_vqa/index.json
+    - data/vlm_mds/260120/molmoact_grounding/index.json
+    - data/vlm_mds/260120/agibot-beta_planning/index.json
+    - data/vlm_mds/260120/cc12m_caption/index.json
+    - data/vlm_mds/260120/droid_grounding/index.json
+  is_vlm_data: true
+  transforms:
+    training:
+      - type: Resize
+        max_pixels: 345600
+        factor: 32
+        data_flow:
+          media: media
+      - type: VLMProcessor
+      - type: Collect
+        patterns: [vlm*]
+
+vlm_xr05:
+  train_path:
+    - data/open-data/vlm_data/XR-05/mds/image__cambrian/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__finevision/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__mimo_vl_caption/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__mimo_vl_doc/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__mimo_vl_grounding/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__mimo_vl_ocr/index.json
+    - data/open-data/vlm_data/XR-05/mds/image__mimo_vl_vqa/index.json
+  is_vlm_data: true
+  transforms:
+    training:
+      - type: Resize
+        max_pixels: 345600
+        factor: 32
+        data_flow:
+          media: media
+      - type: VLMProcessor
+      - type: Collect
+        patterns: [vlm*]

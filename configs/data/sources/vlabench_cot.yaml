@@ -1,0 +1,124 @@
+# @package _global_
+
+sources:
+  vlabench_cot:
+    train_path:
+      - cache/mds/vlabench/v1/2026-04-20/train/index.json
+
+
+    q01:
+      proprio_direct:
+        [[ -0.2867122783064842,
+        0.16619977008327844,
+        0.015611127111036328,
+        -3.141592264175415,
+        -1.5602693796992302,
+        -3.1378199741363524,
+        0.0]]
+
+      action_direct:
+        [[-0.01214240796566013,
+        -0.010770677334070167,
+        -0.011584182667732201,
+        -0.11735754303932167,
+        -0.07340448207855221,
+        -0.3153255018711092,
+        0.0]]
+
+    q99:
+      proprio_direct:
+        [[ 0.337306442797184,
+        0.7169581191390754,
+        0.4698220830816775,
+        3.140335627269745,
+        0.030160902953147994,
+        3.135303365707397,
+        0.9998]]
+
+      action_direct:
+        [[0.011715778779983532,
+        0.01306807228922846,
+        0.01551357789039609,
+        0.0837099075794221,
+        0.06282817285060882,
+        0.31230599551200866,
+        0.9998]]
+
+
+    transforms:
+      training:
+        - type: LoadData
+          dataset_action_length: 10
+          general_task_prob: 0.0
+          subtask_task_prob: 1.0
+          add_cot_prob: 0.5
+          cot_fields: ${cot_fields_all}
+
+        - type: PhotoMetricDistortion
+          data_flow:
+            media: media
+
+        - type: GetDeltaActionFromAbsEE
+          padding_action: [0, 0, 0, 0, 0, 0, -1]
+          wrap_euler: true
+          euler_slice: [3, 6]
+          delta_dim: 6
+          reversed_data_flow:
+            action_direct:
+              - proprios.direct
+              - actions.direct
+
+        - type: GetAbsState
+          data_flow:
+            proprios.direct: proprio_direct
+
+        - type: Normalize
+          mode: quantile
+          q01: ${sources.vlabench_cot.q01}
+          q99: ${sources.vlabench_cot.q99}
+          data_flow:
+            action_direct: action_direct_qn
+            proprio_direct: proprio_direct_qn
+
+        - type: ComposeState
+          reversed_data_flow:
+            state_qn:
+              proprio_direct_qn: [0, 7]
+
+        - type: BinDiscretize
+          data_flow:
+            state_qn: discretized_state
+
+      # validation:
+      #   - type: LoadData
+      #     dataset_action_length: 10
+      #     general_task_prob: 0.0
+      #     subtask_task_prob: 1.0
+      #     add_cot_prob: 1.0
+      #     cot_fields: ${cot_fields_all}
+
+      #   - type: GetAbsAction
+      #     padding_action: [0, 0, 0, 0, 0, 0, -1]
+      #     data_flow:
+      #       actions.direct: action_direct
+
+      #   - type: GetAbsState
+      #     data_flow:
+      #       proprios.direct: proprio_direct
+
+      #   - type: Normalize
+      #     mode: quantile
+      #     q01: ${sources.vlabench_cot.q01}
+      #     q99: ${sources.vlabench_cot.q99}
+      #     data_flow:
+      #       action_direct: action_direct_qn
+      #       proprio_direct: proprio_direct_qn
+
+      #   - type: ComposeState
+      #     reversed_data_flow:
+      #       state_qn:
+      #         proprio_direct_qn: [0, 7]
+
+      #   - type: BinDiscretize
+      #     data_flow:
+      #       state_qn: discretized_state

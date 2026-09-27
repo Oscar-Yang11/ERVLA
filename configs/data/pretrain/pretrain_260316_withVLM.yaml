@@ -1,0 +1,118 @@
+# @package _global_
+
+defaults:
+  - sources/agibot
+  - sources/fractal
+  - sources/bridge
+  - sources/droid
+  - sources/molmoact
+  - sources/midata
+  - sources/vlm
+
+data:
+  type: BaseDataModule
+  params:
+    type: stream # [stream, json], json is only available while no vlm data existing.
+    max_steps: ${trainer.max_steps}
+    add_meta_to_prompt: true
+    obs_length: 1
+    obs_interval: 1
+    action_length: 30
+
+    train_datasets:
+      batch_size: 16
+      sources:
+        agibot_0_100_pt_v4:
+          weight: 0.09
+        agibot_100_500_pt_v4:
+          weight: 0.233
+        agibot_500_1000_pt_v4:
+          weight: 0.192
+        midata_pt_v4:
+          weight: 0.335
+        droid_pt_v4:
+          weight: 0.108
+        molmoact_pt_v4:
+          weight: 0.007
+        fractal_pt_v4:
+          weight: 0.025
+        bridge_pt_v4:
+          weight: 0.01
+        vlm:
+          weight: 0.2
+      transforms:
+        - type: GetTaskStatusAndActionMask
+          data_flow:
+            action_mask: [task_status, action_mask]
+        - type: ComposeAction
+          reversed_data_flow:
+            action:
+              action_left_ee_pos_gn: [0, 3]
+              action_left_ee_aa_gn: [3, 6]
+              action_left_gripper_pos_gn: [6, 7]
+              action_left_arm_joint_gn: [7, 14]
+              action_left_gripper_pos_direct_gn: [14, 15]
+              action_right_ee_pos_gn: [15, 18]
+              action_right_ee_aa_gn: [18, 21]
+              action_right_gripper_pos_gn: [21, 22]
+              action_right_arm_joint_gn: [22, 29]
+              action_right_gripper_pos_direct_gn: [29, 30]
+              action_padding: [30, 32]
+              action_mask_key: action_mask
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_left_gripper_pos_qn: [0, 1]
+              proprio_left_arm_joint_qn: [1, 8]
+              proprio_right_gripper_pos_qn: [8, 9]
+              proprio_right_arm_joint_qn: [9, 16]
+              proprio_padding: [16, 20]
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+          enable_choice: true
+        - type: Collect
+          patterns: [state, action, action_mask, vlm*]
+
+    val_datasets:
+      batch_size: 16
+      sources:
+        agibot_pt_v4:
+          weight: 1.0
+        midata_pt_v4_lego:
+          weight: 1.0
+        midata_pt_v4_towel:
+          weight: 1.0
+      transforms:
+        - type: GetTaskStatusAndActionMask
+          data_flow:
+            action_mask: [task_status, action_mask]
+        - type: ComposeAction
+          reversed_data_flow:
+            action:
+              action_left_ee_pos_gn: [0, 3]
+              action_left_ee_aa_gn: [3, 6]
+              action_left_gripper_pos_gn: [6, 7]
+              action_left_arm_joint_gn: [7, 14]
+              action_left_gripper_pos_direct_gn: [14, 15]
+              action_right_ee_pos_gn: [15, 18]
+              action_right_ee_aa_gn: [18, 21]
+              action_right_gripper_pos_gn: [21, 22]
+              action_right_arm_joint_gn: [22, 29]
+              action_right_gripper_pos_direct_gn: [29, 30]
+              action_padding: [30, 32]
+              action_mask_key: action_mask
+        - type: ComposeState
+          reversed_data_flow:
+            state:
+              proprio_left_gripper_pos_qn: [0, 1]
+              proprio_left_arm_joint_qn: [1, 8]
+              proprio_right_gripper_pos_qn: [8, 9]
+              proprio_right_arm_joint_qn: [9, 16]
+              proprio_padding: [16, 20]
+        - type: VLMProcessor
+          model: Qwen/Qwen3-VL-4B-Instruct
+          enable_l1: false
+          enable_choice: true
+        - type: Collect
+          patterns: [state, action, action_mask, vlm*]

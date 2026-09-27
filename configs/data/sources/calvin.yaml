@@ -1,0 +1,185 @@
+calvin_abc_orig:
+  train_path:
+    - data/calvin_abc_trimmed/rel/2025-11-12/training/data/
+  val_path:
+    - data/calvin_abc/rel/2025-11-12/validation/data/
+  meta_info: "Dataset: Calvin."
+
+  transforms:
+    training:
+      - type: LoadData
+        dataset_action_length: 10
+        general_task_prob: 0.0
+        subtask_task_prob: 1.0
+      - type: Resize
+        max_pixels: 90000
+        factor: 32
+        data_flow:
+          media: media
+      - type: RandomCrop
+        crop_ratio: 0.95
+        center_crop: false
+        data_flow:
+          media: media
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, 1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.calvin_abc_orig.mean}
+        std: ${sources.calvin_abc_orig.std}
+        data_flow:
+          action_direct: action_direct
+    
+    validation:
+      - type: LoadData
+        dataset_action_length: 10
+        general_task_prob: 0.0
+        subtask_task_prob: 1.0
+      - type: Resize
+        max_pixels: 90000
+        factor: 32
+        data_flow:
+          media: media
+      - type: RandomCrop
+        crop_ratio: 0.95
+        center_crop: true
+        data_flow:
+          media: media
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, 1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.calvin_abc_orig.mean}
+        std: ${sources.calvin_abc_orig.std}
+        data_flow:
+          action_direct: action_direct
+
+  mean:
+    action_direct: 
+      [
+        [
+          0.0010866472268819618,
+          0.010116912302615215,
+          -0.008357305846984004,
+          -0.002697174228249144,
+          0.0009072717644128533,
+          -0.0048314784015396645,
+          -0.08337152579105851
+        ]
+      ]
+  std:
+    action_direct: 
+      [
+        [
+          0.2495469525682764,
+          0.20441892719211055,
+          0.2120733907408054,
+          0.15890847875424444,
+          0.1738928823530146,
+          0.3548570340866025,
+          0.9965185340410228
+        ]
+      ]
+
+calvin_abcd_orig:
+  train_path:
+    - data/calvin_abcd_trimmed/rel/2025-11-12/training/data/
+  val_path:
+    - data/calvin_abcd/rel/2025-11-12/validation/data/
+  meta_info: "Dataset: Calvin."
+
+  transforms:
+    training:
+      - type: LoadData
+        dataset_action_length: 10
+        general_task_prob: 0.0
+        subtask_task_prob: 1.0
+      - type: Resize
+        max_pixels: 90000
+        factor: 32
+        data_flow:
+          media: media
+      - type: RandomCrop
+        crop_ratio: 0.95
+        center_crop: false
+        data_flow:
+          media: media
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, 1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.calvin_abcd_orig.mean}
+        std: ${sources.calvin_abcd_orig.std}
+        data_flow:
+          action_direct: action_direct
+    
+    validation:
+      - type: LoadData
+        dataset_action_length: 10
+        general_task_prob: 0.0
+        subtask_task_prob: 1.0
+      - type: Resize
+        max_pixels: 90000
+        factor: 32
+        data_flow:
+          media: media
+      - type: RandomCrop
+        crop_ratio: 0.95
+        center_crop: true
+        data_flow:
+          media: media
+      - type: GetAbsAction
+        padding_action: [0, 0, 0, 0, 0, 0, 1]
+        data_flow:
+          actions.direct: action_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.direct: proprio_direct
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.calvin_abcd_orig.mean}
+        std: ${sources.calvin_abcd_orig.std}
+        data_flow:
+          action_direct: action_direct
+
+  mean:
+    action_direct: 
+      [
+        [
+          0.0006934747891273233,
+          0.01072591563909572,
+          -0.00943224096451948,
+          -0.003275903582833718,
+          0.001899372161050171,
+          -0.004203858991501247,
+          -0.07881555686505624
+        ]
+      ]
+  std:
+    action_direct: 
+      [
+        [
+          0.24869018647706873,
+          0.20415196896762947,
+          0.21220174324750085,
+          0.15715483881867348,
+          0.1708906310202204,
+          0.35230074816792223,
+          0.9968892155079471
+        ]
+      ]

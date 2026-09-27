@@ -1,0 +1,11 @@
+# @package _global_
+
+###################################################################
+# Do not modify any default value, adding new variable is allowed #
+###################################################################
+
+defaults:
+  - _self_
+  - data: libero/libero_10_qwen3vl
+  - model: P2
+  - trainer: deepspeed

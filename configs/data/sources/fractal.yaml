@@ -1,0 +1,139 @@
+fractal_pt_v4:
+  train_path:
+    - data/mds/fractal20220817_data/v1/2025-11-17-ori-view-0/train/index.json
+  meta_info: "Dataset: Fractal. Robot: Single arm. Camera: Ego camera. Frequency: 3hz."
+  transforms:
+    training:
+      - type: LoadData
+        meta_info: ${sources.fractal_pt_v4.meta_info}
+        dataset_action_length: 3
+        general_task_prob: 0.0
+        subtask_task_prob: 1.0
+      - type: Resize
+        max_pixels: 90000
+        factor: 32
+        data_flow:
+          media: media
+      - type: RandomCrop
+        crop_ratio: 0.95
+        center_crop: false
+        data_flow:
+          media: media
+      - type: PhotoMetricDistortion
+        data_flow:
+          media: media
+      - type: GetEEActionPos
+        reversed_data_flow:
+          action_left_ee_pos: [proprios.left_ee_rotm, proprios.left_ee_pos, actions.left_ee_pos]
+      - type: GetEEActionAA
+        reversed_data_flow:
+          action_left_ee_aa: [proprios.left_ee_rotm, actions.left_ee_rotm]
+      - type: GetAbsAction
+        data_flow:
+          actions.left_gripper_pos_direct: action_left_gripper_pos_direct
+      - type: GetAbsState
+        data_flow:
+          proprios.left_gripper_pos: proprio_left_gripper_pos
+      - type: Normalize
+        mode: quantile
+        q01: ${sources.fractal_pt_v4.q01}
+        q99: ${sources.fractal_pt_v4.q99}
+        data_flow:
+          proprio_left_gripper_pos: proprio_left_gripper_pos_qn
+          action_left_ee_pos: action_left_ee_pos_qn
+          action_left_ee_aa: action_left_ee_aa_qn
+          action_left_gripper_pos_direct: action_left_gripper_pos_direct_qn
+      - type: Normalize
+        mode: gaussian
+        mean: ${sources.fractal_pt_v4.mean}
+        std: ${sources.fractal_pt_v4.std}
+        data_flow:
+          action_left_ee_pos: action_left_ee_pos_gn
+          action_left_ee_aa: action_left_ee_aa_gn
+          action_left_gripper_pos_direct: action_left_gripper_pos_direct_gn
+
+  q01:
+    action_left_gripper_pos_direct:
+      [
+        [+0.0000],
+        [+0.0000],
+        [+0.0000],
+      ]
+    action_left_ee_pos:
+      [
+        [-0.0467, -0.0439, -0.0581],
+        [-0.0857, -0.0825, -0.1124],
+        [-0.1177, -0.1148, -0.1575],
+      ]
+    action_left_ee_aa:
+      [
+        [-0.1105, -0.0985, -0.1305],
+        [-0.2067, -0.1841, -0.2454],
+        [-0.2840, -0.2549, -0.3404],
+      ]
+    proprio_left_gripper_pos:
+      [
+        [+0.0000],
+      ]
+  q99:
+    action_left_gripper_pos_direct:
+      [
+        [+1.0000],
+        [+1.0000],
+        [+1.0000],
+      ]
+    action_left_ee_pos:
+      [
+        [+0.0540, +0.0492, +0.0691],
+        [+0.1009, +0.0909, +0.1255],
+        [+0.1408, +0.1259, +0.1711],
+      ]
+    action_left_ee_aa:
+      [
+        [+0.1081, +0.1753, +0.1246],
+        [+0.1976, +0.3298, +0.2317],
+        [+0.2688, +0.4596, +0.3192],
+      ]
+    proprio_left_gripper_pos:
+      [
+        [+1.0000],
+      ]
+
+  mean:
+    action_left_gripper_pos_direct:
+      [
+        [+0.5200],
+        [+0.5144],
+        [+0.5089],
+      ]
+    action_left_ee_pos:
+      [
+        [+0.0015, +0.0017, +0.0074],
+        [+0.0033, +0.0031, +0.0138],
+        [+0.0052, +0.0041, +0.0196],
+      ]
+    action_left_ee_aa:
+      [
+        [+0.0021, +0.0140, +0.0016],
+        [+0.0038, +0.0281, +0.0031],
+        [+0.0052, +0.0415, +0.0045],
+      ]
+  std:
+    action_left_gripper_pos_direct:
+      [
+        [+0.4996],
+        [+0.4998],
+        [+0.4999],
+      ]
+    action_left_ee_pos:
+      [
+        [+0.0168, +0.0159, +0.0222],
+        [+0.0316, +0.0300, +0.0423],
+        [+0.0448, +0.0426, +0.0603],
+      ]
+    action_left_ee_aa:
+      [
+        [+0.0378, +0.0463, +0.0423],
+        [+0.0706, +0.0871, +0.0794],
+        [+0.0985, +0.1224, +0.1117],
+      ]

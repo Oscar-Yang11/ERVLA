@@ -1,0 +1,17 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "P2_Choice_KI"
+      state_shape: auto
+      action_shape: auto
+      dit_num_layers: 36
+      training_repeat: 4
+      freeze_vlm: false
+      stop_gradient_to_vlm: false
+      enable_dct: false
+      n_choices: 5
+      knowledge_insulation: true

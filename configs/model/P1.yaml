@@ -1,0 +1,11 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "P1"
+      state_shape: auto
+      action_shape: auto
+      dit_num_layers: 16

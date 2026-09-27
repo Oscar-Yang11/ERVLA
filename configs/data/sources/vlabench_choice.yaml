@@ -1,0 +1,78 @@
+# @package _global_
+
+sources:
+  vlabench_choice:
+    train_path:
+      - data/vlabench/v1/2026-04-10/train/data
+
+
+    mean:
+      proprio_direct:
+        [[0.029658030718564987,
+        0.3951062262058258,
+        0.2574031352996826,
+        0.47826212644577026,
+        -0.37440139055252075,
+        -0.11539287120103836,
+        0.4443828761577606]]
+
+      action_direct:
+        [[-0.0002461200929246843,
+        0.002156923757866025,
+        -0.0018848262261599302,
+        0.0004669814952649176,
+        -0.004339688923209906,
+        -0.003274056361988187,
+        0.5200329422950745]]
+
+    std:
+      proprio_direct:
+        [[0.1579706370830536,
+        0.13740405440330505,
+        0.1374294012784958,
+        2.8710575103759766,
+        0.623870313167572,
+        1.7478678226470947,
+        0.4968971014022827]]
+
+      action_direct:
+        [[0.010119620710611343,
+        0.013419044204056263,
+        0.02213963307440281,
+        0.1852775663137436,
+        0.022742468863725662,
+        0.22031664848327637,
+        0.49959853291511536]]
+
+    transforms:
+      training:
+        - type: LoadData
+          dataset_action_length: 10
+          general_task_prob: 0.0
+          subtask_task_prob: 1.0
+          add_cot_prob: 0.0
+
+        - type: PhotoMetricDistortion
+          data_flow:
+            media: media
+
+        - type: GetDeltaActionFromAbsEE
+          padding_action: [0, 0, 0, 0, 0, 0, -1]
+          wrap_euler: true
+          euler_slice: [3, 6]
+          delta_dim: 6
+          reversed_data_flow:
+            action_direct:
+              - proprios.direct
+              - actions.direct
+
+        - type: GetAbsState
+          data_flow:
+            proprios.direct: proprio_direct
+
+        - type: Normalize
+          mode: gaussian
+          mean: ${sources.vlabench_choice.mean}
+          std: ${sources.vlabench_choice.std}
+          data_flow:
+            action_direct: action_direct_norm
