@@ -33,6 +33,24 @@ The data format follows the same hierarchy used by the model: a high-level goal 
   <img src="assets/ervla/cot-format.png" alt="Embodied CoT data format" width="100%">
 </p>
 
+## Models and datasets
+
+Pretrained and post-trained checkpoints are available on Hugging Face:
+
+- [Pretrain](https://huggingface.co/ERVLA/pretrain)
+- [VLABench](https://huggingface.co/ERVLA/vlabench)
+- [LIBERO-Plus](https://huggingface.co/ERVLA/liberoplus)
+
+The JSON+video datasets and their CoT annotations are hosted here:
+
+- [VLABench](https://huggingface.co/datasets/ERVLA/VLABench)
+- [LIBERO](https://huggingface.co/datasets/ERVLA/Libero)
+- [Bridge](https://huggingface.co/datasets/ERVLA/Bridge)
+- [DROID](https://huggingface.co/datasets/ERVLA/Droid)
+- [Fractal](https://huggingface.co/datasets/ERVLA/Fractal)
+- [MolmoAct](https://huggingface.co/datasets/ERVLA/MolmoAct)
+- [AgiBot](https://huggingface.co/datasets/ERVLA/AgiBot)
+
 ## Installation
 
 ### Create a Python environment
@@ -152,11 +170,11 @@ The scaling study is a useful qualification: adding more explicit CoT to an auto
 
 The ablation rows from Tables 3 and 4 compare the choice policy and knowledge truncation on both benchmarks.
 
-**LIBERO-Plus (Table 3)**
+**LIBERO-Plus**
 
 ![LIBERO-Plus design ablations from Table 3](assets/ervla/libero-design-ablation.png)
 
-**VLABench (Table 4)**
+**VLABench**
 
 ![VLABench design ablations from Table 4](assets/ervla/vlabench-design-ablation.png)
 
