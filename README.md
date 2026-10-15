@@ -6,7 +6,7 @@
 
 Nan Sun, Yuan Zhang, Yongkun Yang, Wentao Zhao, Peiyan Li, Jun Guo, Wenxuan Song, Pengxiang Ding, Runze Suo, Yifei Su, Xin Xiao, Xinghang Li, Huaping Liu
 
-[Paper](https://arxiv.org/abs/2606.03784) · [Project page](https://taoshuaiz.github.io/ERVLA/)
+[Paper](https://arxiv.org/abs/2606.03784) · [Project page](https://taoshuaiz.github.io/ERVLA/) · [Model & Dataset](https://huggingface.co/ERVLA) 
 
 </div>
 
@@ -33,23 +33,6 @@ The data format follows the same hierarchy used by the model: a high-level goal 
   <img src="assets/ervla/cot-format.png" alt="Embodied CoT data format" width="100%">
 </p>
 
-## Models and datasets
-
-Pretrained and post-trained checkpoints are available on Hugging Face:
-
-- [Pretrain](https://huggingface.co/ERVLA/pretrain)
-- [VLABench](https://huggingface.co/ERVLA/vlabench)
-- [LIBERO-Plus](https://huggingface.co/ERVLA/liberoplus)
-
-The JSON+video datasets and their CoT annotations are hosted here:
-
-- [VLABench](https://huggingface.co/datasets/ERVLA/VLABench)
-- [LIBERO](https://huggingface.co/datasets/ERVLA/Libero)
-- [Bridge](https://huggingface.co/datasets/ERVLA/Bridge)
-- [DROID](https://huggingface.co/datasets/ERVLA/Droid)
-- [Fractal](https://huggingface.co/datasets/ERVLA/Fractal)
-- [MolmoAct](https://huggingface.co/datasets/ERVLA/MolmoAct)
-- [AgiBot](https://huggingface.co/datasets/ERVLA/AgiBot)
 
 ## Installation
 
